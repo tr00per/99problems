@@ -45,3 +45,18 @@ problem12 = concatMap (uncurry replicate)
 
 problem14 :: [a] -> [a]
 problem14 = concatMap (replicate 2)
+
+problem15 :: Int -> [a] -> [a]
+problem15 n = concatMap (replicate n)
+
+problem16 :: Int -> [a] -> [a]
+problem16 _ [] = []
+problem16 n xs = removeNth xs
+    where removeNth = uncurry (++) . second (problem16 n . safeTail) . splitAt (n-1)
+          safeTail as = if null as then as else tail as
+
+problem17 :: Int -> [a] -> ([a], [a])
+problem17 = splitAt
+
+problem18 :: Int -> Int -> [a] -> [a]
+problem18 from to = take (to-from+1) . drop (from-1)
