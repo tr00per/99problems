@@ -9,6 +9,8 @@ import           Control.Monad
 import           Control.Monad.Trans
 import           Control.Monad.Trans.State
 import           Data.List
+import           Data.Map                  ((!))
+import qualified Data.Map                  as M
 import           System.Random
 
 problem01 :: [a] -> a
@@ -137,9 +139,23 @@ problem26 = iter
             | n > xslen = []
             | otherwise = do
             spl <- [1..xslen]
-            let (as, bs) = splitAt spl xs
-                lastas = last as
-            bs' <- iter (n-1) bs
-            return (lastas : bs')
+            let (a, as) = getSplit spl xs
+            bs <- iter (n-1) as
+            return (a : bs)
             where
                 xslen = length xs
+                getSplit m = head &&& tail . drop (m-1)
+
+-- TODO: problem27
+
+problem28a :: [[a]] -> [[a]]
+problem28a = sortOn length
+
+problem28b :: [[a]] -> [[a]]
+problem28b xss = sortOn analyzeLengths xss
+    where
+        lengths = group $ sort $ map length xss
+        lengthFreq = M.fromList $ map (head &&& length) lengths
+
+        analyzeLengths :: [a] -> Int
+        analyzeLengths xs = lengthFreq ! length xs
