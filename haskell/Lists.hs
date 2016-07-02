@@ -97,14 +97,20 @@ runProblem23 :: Int -> [a] -> IO [a]
 runProblem23 n collection = evalState (problem23 n collection) <$> newStdGen
 
 problem24 :: Int -> Int -> StateT [Int] (State StdGen) ()
-problem24 n limit = do
-
-    result <- get
-    r <- lift randomize
-    when (r `notElem` result) $ put (r:result)
-
-    return ()
+problem24 n limit
+    | n >= limit = iter
+    | otherwise = error ("Not enough elements to pick " ++ show n ++ " unique values")
     where
+        iter :: StateT [Int] (State StdGen) ()
+        iter = do
+            result <- get
+            r <- lift randomize
+            let newResult = if r `notElem` result
+                then r:result
+                else result
+            put newResult
+            unless (length newResult == n) iter
+
         randomize :: State StdGen Int
         randomize = do
             (x, newGen) <- next <$> get
@@ -114,14 +120,26 @@ problem24 n limit = do
 runProblem24 :: Int -> Int -> IO [Int]
 runProblem24 n limit = evalState (execStateT (problem24 n limit) []) <$> newStdGen
 
--- non-unique values
-problem24' :: Int -> Int -> State StdGen [Int]
-problem24' n limit = mapM randomize [1..n]
-    where randomize :: Int -> State StdGen Int
-          randomize _ = do
-              (x, newGen) <- next <$> get
-              put newGen
-              return (x `mod` limit + 1)
+problem25 :: [a] -> StdGen -> [a]
+problem25 xs gen = perms !! idx
+    where
+        perms = permutations xs
+        (idx, _) = first (`mod` length perms) $ next gen
 
-runProblem24' :: Int -> Int -> IO [Int]
-runProblem24' n limit = evalState (problem24' n limit) <$> newStdGen
+runProblem25 :: [a] -> IO [a]
+runProblem25 xs = problem25 xs <$> newStdGen
+
+problem26 :: Int -> [a] -> [[a]]
+problem26 = iter
+    where
+        iter 0 _ = []
+        iter n xs
+            | n > xslen = []
+            | otherwise = do
+            spl <- [1..xslen-1]
+            let (as, bs) = splitAt spl xs
+                lastas = last as
+            bs' <- iter (n-1) bs
+            return (lastas : bs')
+            where
+                xslen = length xs
