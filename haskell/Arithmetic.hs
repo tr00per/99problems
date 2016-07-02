@@ -47,3 +47,27 @@ problem07 x y = iter (max x y) (min x y)
 
 problem08 :: Int -> Int -> Bool
 problem08 x y = (==1) $ problem07 x y
+
+problem09 :: Int -> Int
+problem09 1 = 1
+problem09 x = length $ filter (problem08 x) [1..x-1]
+
+problem10 :: Int -> Int
+problem10 x = product $ flip map (problem03 x) $ \(p,m) ->
+    (p - 1) * p ^ (m-1)
+
+{- Problem 11 in GHCi
+> :set +s
+> Arithmetic.problem10 10090
+4032
+(0.01 secs, 5,647,280 bytes)
+> Arithmetic.problem09 10090
+4032
+(0.07 secs, 40,670,544 bytes)
+> Arithmetic.problem10 10090
+4032
+(0.00 secs, 0 bytes)
+> Arithmetic.problem09 10090
+4032
+(0.08 secs, 38,534,040 bytes)
+-}
