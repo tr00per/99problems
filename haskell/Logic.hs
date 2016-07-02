@@ -69,3 +69,12 @@ problem02 = printTable $ table ['A', 'B'] $ var 'A' `and` (var 'A' `or` not (var
 -- A and (B or C) equ A and B or A and C
 problem03 = printTable $ table ['A', 'B', 'C'] $
     (var 'A' `and` (var 'B' `or` var 'C')) `equ` ((var 'A' `and` var 'B') `or` (var 'A' `and` var 'C'))
+
+problem04 :: Int -> String -> Bool
+problem04 len target = target `elem` grays len
+    where
+        grays 0 = return ""
+        grays n = do
+            h <- ['0', '1']
+            t <- grays (n-1)
+            return (h : t)
