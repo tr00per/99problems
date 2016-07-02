@@ -98,7 +98,7 @@ runProblem23 n collection = evalState (problem23 n collection) <$> newStdGen
 
 problem24 :: Int -> Int -> StateT [Int] (State StdGen) ()
 problem24 n limit
-    | n >= limit = iter
+    | n <= limit = iter
     | otherwise = error ("Not enough elements to pick " ++ show n ++ " unique values")
     where
         iter :: StateT [Int] (State StdGen) ()
