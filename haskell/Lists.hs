@@ -132,11 +132,11 @@ runProblem25 xs = problem25 xs <$> newStdGen
 problem26 :: Int -> [a] -> [[a]]
 problem26 = iter
     where
-        iter 0 _ = []
+        iter 0 _ = return []
         iter n xs
             | n > xslen = []
             | otherwise = do
-            spl <- [1..xslen-1]
+            spl <- [1..xslen]
             let (as, bs) = splitAt spl xs
                 lastas = last as
             bs' <- iter (n-1) bs
