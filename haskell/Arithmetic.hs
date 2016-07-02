@@ -35,4 +35,15 @@ testProblem06 limit = forM_ (filter bothBigger $ problem06 2 limit) $ \(x,y) ->
         bothBigger :: (Int, Int) -> Bool
         bothBigger pair = case ((>50) *** (>50)) pair of
             (True, True) -> True
-            _ -> False
+            _            -> False
+
+problem07 :: Int -> Int -> Int
+problem07 x y = iter (max x y) (min x y)
+    where
+        iter a b = case a `quotRem` b of
+            (0, _) -> error "No GCD"
+            (_, 0) -> b
+            (q, r) -> iter b r
+
+problem08 :: Int -> Int -> Bool
+problem08 x y = (==1) $ problem07 x y
