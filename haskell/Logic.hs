@@ -83,22 +83,22 @@ problem04 len target = target `elem` grays len
 
 data CodeTree a = Node [a] (CodeTree a) (CodeTree a) | Left a | Right a
 
-contains :: Eq a => CodeTree a -> a
+contains :: Eq a => CodeTree a -> a -> Bool
 contains = undefined
 
 buildFromFreqMap :: M.Map a Int -> CodeTree a
 buildFromFreqMap = undefined
 
 problem05 :: M.Map Char Int -> M.Map Char String
-problem05 frequencies = fmap (\(ch, _) -> (ch, findInCodeTree ch)) frequencies
+problem05 frequencies = M.mapWithKey (\ch _ -> findInCodeTree ch) frequencies
     where
         codeTree :: CodeTree Char
         codeTree = buildFromFreqMap frequencies
 
         findInCodeTree :: Char -> String
-        findInCodeTree ch = find ch codeTree
-            where find (Node l r) =
-                      if l `contains` ch then find ch l else find ch r
+        findInCodeTree ch = find codeTree
+            where find (Node _ l r) =
+                      if l `contains` ch then find l else find r
                   find (Left c) =
                       if ch == c then "" else error ("Unknown code for " ++ show c)
 
